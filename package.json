@@ -1,30 +1,38 @@
 {
-  "name": "interview-handout",
+  "name": "interview-handout-template",
   "version": "0.1.0",
   "packageManager": "pnpm@8.8.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "relay:watch": "relay-compiler --watch",
+    "relay": "relay-compiler",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
   "dependencies": {
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.18.62",
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-relay": "^16.0.0",
-    "react-scripts": "5.0.1",
-    "relay-runtime": "^16.0.0",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "relay-runtime": "^16.0.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "relay:watch": "relay-compiler --watch",
-    "relay": "relay-compiler"
+  "devDependencies": {
+    "@types/node": "^20.9.4",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@types/react-relay": "^16.0.2",
+    "@types/relay-runtime": "^14.1.17",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "babel-plugin-relay": "^16.0.0",
+    "eslint": "^8.53.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.4",
+    "relay-compiler": "^16.0.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.0.0"
   },
   "eslintConfig": {
     "extends": [
@@ -43,11 +51,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@types/react-relay": "^16.0.2",
-    "@types/relay-runtime": "^14.1.17",
-    "babel-plugin-relay": "^16.0.0",
-    "relay-compiler": "^16.0.0"
   }
 }

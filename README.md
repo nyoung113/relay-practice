@@ -21,5 +21,5 @@ pnpm relay,
 3. 번들러 실행
 
 ```shell
-pnpm start
+pnpm dev
 ```

@@ -6,7 +6,7 @@ import {
   FetchFunction,
 } from "relay-runtime";
 
-const REACT_APP_GITHUB_AUTH_TOKEN = process.env.REACT_APP_GITHUB_AUTH_TOKEN;
+const GITHUB_AUTH_TOKEN = import.meta.env.VITE_GITHUB_AUTH_TOKEN;
 
 const fetchFn: FetchFunction = async (request, variables) => {
   const resp = await fetch("https://api.github.com/graphql", {
@@ -15,7 +15,7 @@ const fetchFn: FetchFunction = async (request, variables) => {
       Accept:
         "application/graphql-response+json; charset=utf-8, application/json; charset=utf-8",
       "Content-Type": "application/json",
-      Authorization: `bearer ${REACT_APP_GITHUB_AUTH_TOKEN}`,
+      Authorization: `bearer ${GITHUB_AUTH_TOKEN}`,
     },
     body: JSON.stringify({
       query: request.text,
