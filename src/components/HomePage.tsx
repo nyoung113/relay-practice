@@ -6,6 +6,7 @@ import Viewer from "./Viewer";
 const Query = graphql`
   query HomePageQuery {
     viewer {
+	# ... => fragment
       ...Viewer_fragment
     }
   }
