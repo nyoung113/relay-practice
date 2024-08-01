@@ -2,7 +2,6 @@ import { useFragment } from "react-relay";
 import { graphql } from "relay-runtime";
 import type { Viewer_fragment$key } from "../__generated__/Viewer_fragment.graphql";
 
-//
 const Fragment = graphql`
   fragment Viewer_fragment on User {
     login,
@@ -20,7 +19,7 @@ const Viewer = ({ viewer }: props) => {
 
 	return (
 		<div>
-			<h2>Viewer</h2>
+			<h2 className="text-2xl">Viewer</h2>
 			<div>Login: {data.login}</div>
 		</div>
 	);
