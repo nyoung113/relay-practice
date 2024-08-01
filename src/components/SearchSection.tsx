@@ -1,25 +1,33 @@
-
-
 import SearchResult from './SearchResult';
-import { SearchResult_fragment$key } from "../__generated__/SearchResult_fragment.graphql";
-import { Suspense } from 'react';
-import SearchBar from './SearchBar';
+import { graphql, useLazyLoadQuery } from 'react-relay';
+import type { SearchSectionQuery } from "../__generated__/SearchSectionQuery.graphql";
 
 
 type Props = {
   keyword : string,
-  setKeyword : React.Dispatch<React.SetStateAction<string>>
-  searchResult : SearchResult_fragment$key
 }
 
-const SearchSection : React.FC<Props> = ({keyword, setKeyword, searchResult}) => {
+const Query = graphql`
+  query SearchSectionQuery($keyword : String!){
+      viewer {
+    # ... => fragment
+        ...Viewer_fragment
+      }
+      # enum type
+      search (query: $keyword type: REPOSITORY) {
+        ...SearchResult_fragment # 여기에 쓰면 generated 폴더에 생성됨
+    }
+  }
+`;
+
+const SearchSection : React.FC<Props> = ({keyword}) => {
+
+ const {search} = useLazyLoadQuery<SearchSectionQuery>(Query, {keyword});
+
   return (
     <>
     <div>result for ${keyword}</div>
-    <Suspense fallback="result loading..">
-      <SearchBar setKeyword={setKeyword} keyword={keyword}/>
-      <SearchResult searchResult={searchResult}/>
-    </Suspense>
+        <SearchResult searchResult={search}/>
     </>
   );
 };
