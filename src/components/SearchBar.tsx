@@ -1,13 +1,29 @@
+import { debounce } from '../utils'
+
 type Props = {
-    keyword : string,
-    setKeyword : React.Dispatch<React.SetStateAction<string>>
-  }
+    isFetching: boolean
+    fetchKeyword: (keyword: string) => void
+}
 
-const SearchBar : React.FC<Props> = ({keyword, setKeyword}) => {
+// NOTE: controlled input | uncontrolled input 착각
+const SearchBar: React.FC<Props> = ({ fetchKeyword, isFetching }) => {
+    const handleChange = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
+        fetchKeyword(e.target.value)
+    }, 500)
 
-  return <input 
-  className="border border-black"
-  value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
-};
+    return (
+        <div className="flex">
+            <input
+                type="text"
+                className="w-full mb-10"
+                onChange={handleChange}
+                placeholder="Find treasure in the code sea!"
+            />
+            <button className="h-4">
+                {isFetching ? <div>loading...</div> : <div>search</div>}
+            </button>
+        </div>
+    )
+}
 
-export default SearchBar;
+export default SearchBar

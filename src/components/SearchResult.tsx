@@ -1,33 +1,30 @@
-
-import { graphql } from "relay-runtime";
-import { useFragment } from "react-relay";
-import { SearchResult_fragment$key } from "../__generated__/SearchResult_fragment.graphql";
-
-const Fragment = graphql`
-fragment SearchResult_fragment on SearchResultItemConnection {
-      userCount
-      nodes {
-        __typename
-            ... on Repository {
-        name
-        archivedAt
-        description
-        isPrivate
-      }
-    }
-}
-`
+import { SearchResult_fragment$data } from '../__generated__/SearchResult_fragment.graphql'
 
 type Props = {
-    searchResult : SearchResult_fragment$key
+    data: SearchResult_fragment$data
 }
 
-const SearchResult : React.FC<Props> = ({searchResult}) => {
-    const data = useFragment(Fragment, searchResult);
-    console.log(data)
+const SearchResult: React.FC<Props> = ({ data }) => {
     return (
-        <div />
-    );
-};
+        <ul className="flex flex-col w-full">
+            {data.search.edges &&
+                data.search.edges.map((edge) => (
+                    <li key={edge?.cursor} className="odd:bg-[#dfdfdf]">
+                        <div>
+                            <a href={edge?.node?.url} target="_blank">
+                                {edge?.node?.nameWithOwner}
+                            </a>
+                        </div>
+                        <div>{edge?.node?.description}</div>
+                        <div>
+                            <div>{edge?.node?.primaryLanguage?.name}</div>
+                            <div>{edge?.node?.stargazerCount}</div>
+                            <div>{edge?.node?.pushedAt}</div>
+                        </div>
+                    </li>
+                ))}
+        </ul>
+    )
+}
 
-export default SearchResult;
+export default SearchResult
