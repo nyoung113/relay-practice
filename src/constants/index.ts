@@ -1,0 +1,1 @@
+export const SEARCHRESULT_DEFAULT_SIZE = 10
