@@ -16,7 +16,11 @@ type props = {
 const Viewer = ({ viewer }: props) => {
     const data = useFragment(Fragment, viewer)
 
-    return <div> user: {data.login}</div>
+    return (
+        <div className="window w-1/2 flex justify-center">
+            <div className="window-body">user: {data.login}</div>
+        </div>
+    )
 }
 
 export default Viewer

@@ -8,17 +8,23 @@ type Props = {
     isFetching: boolean
     fetchKeyword: (keyword: string) => void
 }
+// colocation
+// 리팩토링 요소 : 검색어 suggestion과 result 분리, query params
 
 const Fragment = graphql`
     fragment SearchBar_fragment on Query
+    @argumentDefinitions(
+        suggestionCount: { type: "Int", defaultValue: 5 }
+        suggestionKeyword: { type: "String", defaultValue: "" }
+    )
     @refetchable(queryName: "SearchBarRefetchableQuery") {
         suggestion: search(
-            first: 5
-            query: $suggestionKeyword
+            first: $suggestionCount
+            query: $suggestionKeyword #String!
             type: REPOSITORY
         ) {
             edges {
-                # filter있나 찾아보기
+                cursor
                 node {
                     ... on Repository {
                         nameWithOwner
@@ -30,7 +36,6 @@ const Fragment = graphql`
     }
 `
 
-// NOTE: controlled input | uncontrolled input 착각
 const SearchBar: React.FC<Props> = ({
     fragmentRef,
     fetchKeyword,
@@ -41,13 +46,11 @@ const SearchBar: React.FC<Props> = ({
     const [isFocused, setIsFocused] = useState(false)
     const [isPending, startTransition] = useTransition()
 
-    console.log(data)
-
     const handleChange = debounce((e: React.ChangeEvent<HTMLInputElement>) => {
         startTransition(() => {
             refetch({ suggestionKeyword: e.target.value })
         })
-    }, 500)
+    }, 300)
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -56,6 +59,8 @@ const SearchBar: React.FC<Props> = ({
         }
         inputRef.current?.blur()
     }
+
+    const isDataLoading = isFetching || isPending
 
     return (
         <form className="relative" onSubmit={handleSubmit}>
@@ -70,14 +75,15 @@ const SearchBar: React.FC<Props> = ({
                     onFocus={() => setIsFocused(true)}
                     ref={inputRef}
                 />
-                <button className="h-4" type="submit">
-                    {isFetching ? <div>loading...</div> : <div>search</div>}
+                <button className="h-4" type="submit" disabled={isDataLoading}>
+                    {isDataLoading ? <div>loading...</div> : <div>search</div>}
                 </button>
             </div>
             {isFocused ? (
                 <div className="absolute window min-w-1/2">
+                    <div>Press Enter to see the full results</div>
                     {data.suggestion.edges?.map((edge) => (
-                        <a href={edge?.node?.url}>
+                        <a key={edge?.cursor} href={edge?.node?.url}>
                             <p className="truncate">
                                 {edge?.node?.nameWithOwner}
                             </p>
