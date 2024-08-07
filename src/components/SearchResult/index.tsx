@@ -9,8 +9,8 @@ const SEARCHRESULT_DEFAULT_SIZE = 10
 const Fragment = graphql`
     fragment SearchResult_fragment on Query
     @argumentDefinitions(
-        count: { type: "Int", defaultValue: 10 } # 변수가 들어가지 않는다
-        keyword: { type: "String!" } # String! 이 아니다?
+        count: { type: "Int", defaultValue: 10 }
+        keyword: { type: "String!" }
         cursor: { type: "String", defaultValue: "" }
     )
     @refetchable(queryName: "SearchResultPaginationQuery") {
@@ -40,11 +40,12 @@ const SearchResult: React.FC<Props> = ({ fragmentRef }) => {
     const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment(
         Fragment,
         fragmentRef
-    ) // cursor-based pagination / offset/limit pagination
+    )
 
     const handleClickMoreButton = () => {
         loadNext(SEARCHRESULT_DEFAULT_SIZE)
     }
+
     return (
         <div>
             <ul className="flex flex-col w-full gap-2">

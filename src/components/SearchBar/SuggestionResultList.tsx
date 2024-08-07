@@ -1,19 +1,16 @@
-import React from 'react'
 import { graphql } from 'relay-runtime'
-import { useRefetchableFragment } from 'react-relay'
-import { SuggestionResultList_fragment$key } from '../../__generated__/SuggestionResultList_fragment.graphql'
+import { useLazyLoadQuery } from 'react-relay'
 import SuggestionResultItem from './SuggestionResultItem'
+import { SuggestionResultListQuery } from '../../__generated__/SuggestionResultListQuery.graphql'
 
-const ListFragment = graphql`
-    fragment SuggestionResultList_fragment on Query
-    @argumentDefinitions(
-        suggestionCount: { type: "Int", defaultValue: 5 }
-        suggestionKeyword: { type: "String!" }
-    )
-    @refetchable(queryName: "SearchBarRefetchableQuery") {
-        suggestion: search(
+const Query = graphql`
+    query SuggestionResultListQuery(
+        $suggestionCount: Int
+        $suggestionKeyword: String!
+    ) {
+        search(
             first: $suggestionCount
-            query: $suggestionKeyword #String!
+            query: $suggestionKeyword
             type: REPOSITORY
         ) {
             edges {
@@ -28,23 +25,26 @@ const ListFragment = graphql`
     }
 `
 
-type ListProps = {
-    fragmentRef: SuggestionResultList_fragment$key
+type Props = {
+    suggestionKeyword: string
 }
 
-const SuggestionResultList: React.FC<ListProps> = ({ fragmentRef }) => {
-    const [{ suggestion }, refetch] = useRefetchableFragment(
-        ListFragment,
-        fragmentRef
-    )
+const SuggestionResultList: React.FC<Props> = ({ suggestionKeyword }) => {
+    const { search } = useLazyLoadQuery<SuggestionResultListQuery>(Query, {
+        suggestionCount: 5,
+        suggestionKeyword,
+    })
 
     return (
         <div className="window min-w-1/2">
             <div>Press Enter to see the full results</div>
-            {suggestion.edges?.map(
+            {search.edges?.map(
                 (edge) =>
                     !!edge?.node && (
-                        <SuggestionResultItem fragmentRef={edge?.node} />
+                        <SuggestionResultItem
+                            key={edge.cursor}
+                            fragmentRef={edge?.node}
+                        />
                     )
             )}
         </div>

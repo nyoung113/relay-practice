@@ -6,15 +6,18 @@ type Props = {
 }
 
 const SearchInput: React.FC<Props> = ({ value, handleChange }) => {
+    const handleSubmit = () => {}
     return (
-        <input
-            type="text"
-            name="suggestion"
-            className="w-full"
-            placeholder="Find treasure in the code sea!"
-            value={value}
-            onChange={handleChange}
-        />
+        <form onSubmit={handleSubmit}>
+            <input
+                type="text"
+                name="suggestion"
+                className="w-full"
+                placeholder="Find treasure in the code sea!"
+                value={value}
+                onChange={handleChange}
+            />
+        </form>
     )
 }
 

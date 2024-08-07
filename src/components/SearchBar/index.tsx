@@ -1,48 +1,55 @@
-import {
-    Suspense,
-    useState,
-    // useTransition,
-} from 'react'
-import SearchInput from './SearchInput'
+import { Suspense, useRef, useState } from 'react'
 import SuggestionResultList from './SuggestionResultList'
-import { SuggestionResultList_fragment$key } from '../../__generated__/SuggestionResultList_fragment.graphql'
 import { useSearchParams } from 'react-router-dom'
 
-type Props = {
-    data: SuggestionResultList_fragment$key
-}
-// colocation
-// 리팩토링 요소 : 검색어 suggestion과 result 분리, query params
+const SuggestionLoading = () => (
+    <div className="window min-w-1/2">
+        <div>loading suggestion...</div>
+    </div>
+)
 
-const SearchBar: React.FC<Props> = ({ data }) => {
-    let [searchParams, setSearchParams] = useSearchParams()
+const SearchBar = () => {
+    const [searchParams, setSearchParams] = useSearchParams()
     const [suggestionKeyword, setSuggestionKeyword] = useState(
         searchParams.get('keyword') ?? ''
     )
+    const inputRef = useRef<HTMLInputElement>(null)
+    const [isFocused, setIsFocused] = useState(false)
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setSearchParams({ keyword: suggestionKeyword })
+        inputRef.current?.blur()
     }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSuggestionKeyword(e.target.value)
-        // refetch 필요
     }
 
     return (
-        <form className="relative" onSubmit={handleSubmit}>
-            <div className="flex flex-col">
-                <SearchInput
+        <div className="flex flex-col relative">
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    name="suggestion"
+                    className="w-full"
+                    placeholder="Find treasure in the code sea!"
+                    ref={inputRef}
                     value={suggestionKeyword}
-                    handleChange={handleChange}
+                    onChange={handleChange}
+                    onBlur={() => setIsFocused(false)}
+                    onFocus={() => setIsFocused(true)}
                 />
-                <Suspense fallback={'loading search...'}>
-                    {!!suggestionKeyword && (
-                        <SuggestionResultList fragmentRef={data} />
+            </form>
+            <div className="absolute top-[22px]">
+                <Suspense fallback={<SuggestionLoading />}>
+                    {!!suggestionKeyword && isFocused && (
+                        <SuggestionResultList
+                            suggestionKeyword={suggestionKeyword}
+                        />
                     )}
                 </Suspense>
             </div>
-        </form>
+        </div>
     )
 }
 
