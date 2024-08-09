@@ -19,6 +19,7 @@ yarn install
 ```
 
 2. Download Schema (env file required)
+   <br>
    Github API 를 사용하기 위해 token 발급 필요
 
 ```
