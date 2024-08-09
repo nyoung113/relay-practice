@@ -1,8 +1,10 @@
 import { graphql, useFragment } from 'react-relay'
 import { SearchResultItem_fragment$key } from '../../__generated__/SearchResultItem_fragment.graphql'
+import StarField from './StarField'
 
 const Fragment = graphql`
     fragment SearchResultItem_fragment on Repository {
+        id
         primaryLanguage {
             color
             name
@@ -14,7 +16,7 @@ const Fragment = graphql`
         description
         url
         pushedAt
-        stargazerCount
+        ...StarField_fragment
     }
 `
 
@@ -35,14 +37,14 @@ export const SearchResultItem: React.FC<Props> = ({ fragmentRef }) => {
             <div>{data.description}</div>
             <div className="status-bar">
                 <div
-                    className="status-bar-field"
+                    className="status-bar-field w-[20px]"
                     style={{
                         color: data.primaryLanguage?.color ?? 'black',
                     }}
                 >
                     {data.primaryLanguage?.name}
                 </div>
-                <div className="status-bar-field">{data.stargazerCount}</div>
+                <StarField fragmentRef={data} />
                 <div className="status-bar-field">{data.pushedAt}</div>
             </div>
         </li>

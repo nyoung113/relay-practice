@@ -4,8 +4,10 @@ import type { Viewer_fragment$key } from '../__generated__/Viewer_fragment.graph
 
 const Fragment = graphql`
     fragment Viewer_fragment on User {
+        id
         login
         email
+        avatarUrl
     }
 `
 
@@ -17,8 +19,8 @@ const Viewer = ({ viewer }: props) => {
     const data = useFragment(Fragment, viewer)
 
     return (
-        <div className="window w-1/2 flex justify-center">
-            <div className="window-body">user: {data.login}</div>
+        <div>
+            <span className="">user: {data.login}</span>
         </div>
     )
 }

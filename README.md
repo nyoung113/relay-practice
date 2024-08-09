@@ -1,25 +1,48 @@
-# FE 기술 면접 과제 템플릿
+## Relay Github Searcher
 
-## 실행
+Practice Project to use Relay JS and Github Graphql API
 
-1. 의존성 설치
+## Specifications
+
+-   Typescript
+-   React
+-   GraphQL
+-   Relay JS
+-   tailwindCSS
+
+## Run
+
+1. Install Dependencies
 
 ```
-pnpm i
+yarn install
 ```
 
-2. Relay
+2. Download Schema (env file required)
+   Github API 를 사용하기 위해 token 발급 필요
+
+```
+# .env
+VITE_GITHUB_GRAPHQL_ENDPOINT=https://api.github.com/graphql
+VITE_GITHUB_AUTH_TOKEN="put your token here"
+```
+
+3. Run Relay Compiler
 
 ```shell
-pnpm relay:watch,
+yarn relay:watch  # watch mode
 
-// or
+or
 
-pnpm relay,
+yarn relay --watch # watch mode
+
+or
+
+yarn relay
 ```
 
-3. 번들러 실행
+3. Run React Project
 
 ```shell
-pnpm dev
+yarn dev
 ```

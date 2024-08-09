@@ -1,9 +1,8 @@
 import React from 'react'
-import { graphql, usePaginationFragment } from 'react-relay'
-
-import { SearchResult_fragment$key } from '../../__generated__/SearchResult_fragment.graphql'
+import { graphql, useLazyLoadQuery, usePaginationFragment } from 'react-relay'
 import SearchResultItem from './SearchResultItem'
-
+import { SearchResultQuery } from '../../__generated__/SearchResultQuery.graphql'
+import { SearchResult_fragment$key } from '../../__generated__/SearchResult_fragment.graphql'
 const SEARCHRESULT_DEFAULT_SIZE = 10
 
 const Fragment = graphql`
@@ -32,11 +31,11 @@ const Fragment = graphql`
     }
 `
 
-type Props = {
+type SearchResultListProps = {
     fragmentRef: SearchResult_fragment$key
 }
 
-const SearchResult: React.FC<Props> = ({ fragmentRef }) => {
+const SearchResultList: React.FC<SearchResultListProps> = ({ fragmentRef }) => {
     const { data, loadNext, hasNext, isLoadingNext } = usePaginationFragment(
         Fragment,
         fragmentRef
@@ -47,8 +46,8 @@ const SearchResult: React.FC<Props> = ({ fragmentRef }) => {
     }
 
     return (
-        <div>
-            <ul className="flex flex-col w-full gap-2">
+        <>
+            <ul className="flex flex-col w-full gap-2 pb-4 min">
                 {data.search.edges?.map(
                     (edge) =>
                         !!edge?.node && (
@@ -66,8 +65,26 @@ const SearchResult: React.FC<Props> = ({ fragmentRef }) => {
             >
                 {isLoadingNext ? '...loading' : ' ...more'}
             </button>
-        </div>
+        </>
     )
+}
+
+const Query = graphql`
+    query SearchResultQuery($keyword: String!) {
+        ...SearchResult_fragment @arguments(keyword: $keyword)
+    }
+`
+
+type Props = {
+    keyword: string
+}
+
+const SearchResult: React.FC<Props> = ({ keyword }) => {
+    const data = useLazyLoadQuery<SearchResultQuery>(Query, {
+        keyword,
+    })
+
+    return <SearchResultList fragmentRef={data} />
 }
 
 export default SearchResult

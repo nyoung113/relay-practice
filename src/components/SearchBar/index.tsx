@@ -27,7 +27,7 @@ const SearchBar = () => {
 
     return (
         <div className="flex flex-col relative">
-            <form onSubmit={handleSubmit}>
+            <form className="flex" onSubmit={handleSubmit}>
                 <input
                     type="text"
                     name="suggestion"
@@ -39,6 +39,7 @@ const SearchBar = () => {
                     onBlur={() => setIsFocused(false)}
                     onFocus={() => setIsFocused(true)}
                 />
+                <button type="submit">search</button>
             </form>
             <div className="absolute top-[22px]">
                 <Suspense fallback={<SuggestionLoading />}>
